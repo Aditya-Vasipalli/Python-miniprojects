@@ -1,24 +1,15 @@
-
-time_1_hour=int(input('hour 1: '))
-time_1_minute=int(input('min 1: '))
-time_1_second=int(input('sec 1: '))
-time_2_hour=int(input('hour 2: ' ))
-time_2_minute=int(input('min 2: '))
-time_2_second=int(input('sec 2: '))
-
-time_1='2/10/200'
-time_2='1/10/200'
-for i in range(len(time_1)):
-    if time_1[i]=='/':
-        unpack_time_1=0
-
+import re
 def seconds_between():
-    minute1=60*time_1_minute
-    hour1=60*60*time_1_hour
-    total_sec_1=time_1_second + minute1 + hour1
-    minute2=60*time_2_minute
-    hour2=60*60*time_2_hour
-    total_sec_2=time_2_second+minute2+hour2
+    total_sec_1=time_1_second + 60*time_1_minute + 60*60*time_1_hour
+    total_sec_2=time_2_second+60*time_2_minute+60*60*time_2_hour
     second_diff=total_sec_1-total_sec_2
-    return second_diff
-print(f'there are {seconds_between()} seconds between the 2 time')
+    return abs(second_diff)
+try:
+    time_1=input('enter time stamp as hours/minutes/seconds')
+    time_2=input('enter time stamp as hours/minutes/seconds')
+    time_1_hour, time_1_minute, time_1_second=re.split('/| |,', time_1)
+    time_2_hour, time_2_minute, time_2_second=re.split('/| |,', time_2)
+    time_1_hour,time_1_minute,time_1_second,time_2_hour,time_2_minute,time_2_second=int(time_1_hour), int(time_1_minute), int(time_1_second), int(time_2_hour), int(time_2_minute), int(time_2_second)
+    print(f'there are {seconds_between()} seconds between the two times')
+except ValueError:
+    print('please enter integers with / or , or space between each value')
