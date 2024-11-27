@@ -1,9 +1,5 @@
 # Problem 9 : Angle of the Hour Hand 
-''' 
-Ask user to enter the time and find whats the angle of the hour hand (Taas Kata) with respect to 12 o'clock.
-There are 12 hours and 360 degree circle and thus each hour represents 30 degrees (360/12).
-Find the exact number of hours and get the angle. 
-'''
+
 def angle():
     Time_in_hour = H + M /60 + S/3600
     Angle = Time_in_hour * 30
