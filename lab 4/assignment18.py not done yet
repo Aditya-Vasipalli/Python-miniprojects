@@ -1,7 +1,0 @@
-n=int(input('number of pins'))
-k=int(input('number of balls'))
-for i in range(n):
-    print('I', end='')
-    print('\n')
-    for i in range(k):
-        print('.', end='')
