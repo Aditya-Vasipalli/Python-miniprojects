@@ -14,4 +14,3 @@ def second_largest():
     return max(list1)
 
 print(f'The second largest value is: {second_largest()}')
-        
