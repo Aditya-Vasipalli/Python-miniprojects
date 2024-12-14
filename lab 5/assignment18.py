@@ -17,7 +17,7 @@ def ball():
         for j in range(start, end + 1):
             pins[j] = 'down'  # Mark pins as knocked down
     # Output final state of pins
-    result = "".join(["I" if pin == 1 else "." for pin in pins])
+    result = "".join(["I" if pin == 'up' else "." for pin in pins])
     return result
 
 try: 
@@ -32,4 +32,4 @@ try:
 except ValueError:
     print('please enter a whole number')
 except IndexError:
-    print('what')
+    print('please enter correct no. of pin knocked down')
