@@ -47,7 +47,3 @@ def display_weapon_options():
     print("Available Weapons:")
     for weapon in weapon_options:
         print(weapon)
-
-if __name__ == "__main__":
-    display_armor_options()
-    display_weapon_options()

@@ -29,6 +29,11 @@ player_skills = {
         "description": "A sneaky attack that deals extra damage.",
         "effect": lambda player, enemy: enemy.update({"hp": enemy["hp"] - (player.stats["Agility"] * 2)}),
         "cost": {"sp": 6}  # Costs 6 SP
+    },
+    "Cure": {
+        "description": "Removes all lingering effects.",
+        "effect": lambda player, enemy: player.remove_lingering_effects(),
+        "cost": {"mp": 8}  # Costs 8 MP
     }
 }
 

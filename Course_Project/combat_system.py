@@ -1,6 +1,7 @@
 import random
+import time
 from character_creation import Character
-from enemies import select_enemy, display_enemy_details
+from enemies import select_enemy, display_enemy_details, regenerate_enemy_mp, regenerate_enemy_sp
 from skills import player_skills, enemy_skills
 
 def playerdmgcalc(player):
@@ -19,13 +20,22 @@ def display_bars(character, enemy):
     print(f"Player HP: {character.hp} | MP: {character.mp} | SP: {character.sp}")
     print(f"Enemy HP: {enemy['hp']} | MP: {enemy['mp']} | SP: {enemy['sp']}")
 
+def animate_action(action_text):
+    for char in action_text:
+        print(char, end='', flush=True)
+        time.sleep(0.05)
+    print()
+
 def player_turn(player, enemy):
     display_bars(player, enemy)
     print("It's Your turn!")
     print("Choose your move:")
     for i, skill in enumerate(player.skills):
         print(f"{i + 1}. {skill}")
+    print(f"{len(player.skills) + 1}. Run")
     choice = int(input("Enter the number of your choice: ")) - 1
+    if choice == len(player.skills):
+        return "run"
     selected_skill = player.skills[choice]
     skill_cost = player_skills[selected_skill]["cost"]
     
@@ -42,8 +52,10 @@ def player_turn(player, enemy):
         player.sp -= skill_cost["sp"]
     
     player_skills[selected_skill]["effect"](player, enemy)
-    print(f"You used {selected_skill}!")
-    display_enemy_details(enemy)
+    animate_action(f"You used {selected_skill}!")
+    player.regenerate_mp()  # Regenerate MP after player's turn
+    player.regenerate_sp()  # Regenerate SP after player's turn
+    player.apply_lingering_effects()  # Apply lingering effects
     return selected_skill
 
 def enemy_turn(player, enemy):
@@ -64,12 +76,16 @@ def enemy_turn(player, enemy):
         enemy["sp"] -= skill_cost["sp"]
     
     enemy_skills[enemy_skill]["effect"](player, enemy)
-    print(f"The opponent used {enemy_skill}!")
-    print(f"Player's health: {player.hp}")
+    animate_action(f"The opponent used {enemy_skill}!")
+    regenerate_enemy_mp(enemy)  # Regenerate MP after enemy's turn
+    regenerate_enemy_sp(enemy)  # Regenerate SP after enemy's turn
 
 def turnwise(player, enemy):
     while player.hp > 0 and enemy['hp'] > 0:
         selected_skill = player_turn(player, enemy)
+        if selected_skill == "run":
+            print("You ran away from the battle!")
+            return False
         if enemy['hp'] <= 0:
             break
         if selected_skill not in ["Teleport", "Block"]:
@@ -82,8 +98,10 @@ def turnwise(player, enemy):
 
 def win_or_loss(player, enemy):
     if turnwise(player, enemy):
-        player.hp += 200
+        regen_health = int(player.max_hp * 0.65)
+        player.hp = min(player.max_hp, player.hp + regen_health)
         player.gain_xp(enemy['xp_value'])  # Gain XP based on enemy's XP value
+        print(f"You regenerated {regen_health} HP. Current HP: {player.hp}")
         return "Victory!"
     else:
         print("You have died!")
