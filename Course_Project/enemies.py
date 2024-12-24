@@ -304,6 +304,20 @@ def adjust_enemy_stats(enemy, level):
     enemy["mp"] = int(enemy["mp"] * multiplier)  # Adjust MP based on level
     enemy["sp"] = int(enemy["sp"] * multiplier)  # Adjust SP based on level
 
+# Function to regenerate MP for an enemy
+def regenerate_enemy_mp(enemy):
+    regen_amount = 5  # Example regeneration amount
+    max_mp = 10 + (enemy["magical_resistance"] * 5)  # Example calculation for max MP
+    enemy["mp"] = min(max_mp, enemy["mp"] + regen_amount)
+    print(f"{enemy['name']} regenerated {regen_amount} MP. Current MP: {enemy['mp']}")
+
+# Function to regenerate SP for an enemy
+def regenerate_enemy_sp(enemy):
+    regen_amount = 5  # Example regeneration amount
+    max_sp = 10 + (enemy["defense"] * 5)  # Example calculation for max SP
+    enemy["sp"] = min(max_sp, enemy["sp"] + regen_amount)
+    print(f"{enemy['name']} regenerated {regen_amount} SP. Current SP: {enemy['sp']}")
+
 # Example usage
 if __name__ == "__main__":
     enemy_name = input("Enter the name of the enemy to select: ")

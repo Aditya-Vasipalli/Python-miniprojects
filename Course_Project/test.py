@@ -13,7 +13,7 @@ def main():
         choice = input("Select an option: ")
 
         if choice == '1':
-            enemy_name = 'goblin'
+            enemy_name = 'hydra'
             enemy = select_enemy(enemy_name)
             if enemy:
                 level = 1

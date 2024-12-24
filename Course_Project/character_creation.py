@@ -10,12 +10,30 @@ class Character:
         self.level = 1
         self.xp = 0
         self.hp = 100  # Default HP; you can adjust based on class
-        self.mp = 50   # Default MP; you can adjust based on class
-        self.sp = 50   # Default SP; you can adjust based on class
+        self.mp = self.calculate_mp()  # Calculate MP based on Intelligence
+        self.sp = self.calculate_sp()  # Calculate SP based on Agility
         self.xp_threshold = 100  # XP required to level up
         self.stat_points = 0  # Points to assign to stats
         self.crit_chance = 0.1  # Default critical hit chance
         self.critdmg = 2 * self.stats['Strength']  # Default critical damage
+
+    def calculate_mp(self):
+        base_mp = 10
+        return base_mp + (self.stats['Intelligence'] * 2)  # Example multiplier needs to be tweaked
+
+    def calculate_sp(self):
+        base_sp = 10
+        return base_sp + (self.stats['Agility'] * 5)  # Example multiplier needs to be tweaked
+
+    def regenerate_mp(self):
+        regen_amount = 5  # Example regeneration amount
+        self.mp = min(self.calculate_mp(), self.mp + regen_amount)
+        print(f"{self.name} regenerated {regen_amount} MP. Current MP: {self.mp}")
+
+    def regenerate_sp(self):
+        regen_amount = 5  # Example regeneration amount
+        self.sp = min(self.calculate_sp(), self.sp + regen_amount)
+        print(f"{self.name} regenerated {regen_amount} SP. Current SP: {self.sp}")
 
     def __str__(self):
         return f"Name: {self.name}, Class: {self.char_class}, Stats: {self.stats}, Skills: {self.skills}, HP: {self.hp}, MP: {self.mp}, SP: {self.sp}"
@@ -30,8 +48,8 @@ class Character:
             self.xp -= self.xp_threshold
             self.level += 1
             self.hp += 20  # Increase HP by 20 on level up; adjust as needed
-            self.mp += 10  # Increase MP by 10 on level up; adjust as needed
-            self.sp += 10  # Increase SP by 10 on level up; adjust as needed
+            self.mp = self.calculate_mp()  # Recalculate MP on level up
+            self.sp = self.calculate_sp()  # Recalculate SP on level up
             self.xp_threshold = int(self.xp_threshold * 1.5)  # Increase XP threshold for next level
             self.stat_points += 1  # Grant 1 stat point per level
             if self.level % 5 == 0:
@@ -61,6 +79,8 @@ class Character:
             self.stat_points -= 1
             print(f"Assigned 1 point to {choice}. Remaining stat points: {self.stat_points}")
             self.critdmg = 2 * self.stats['Strength']  # Update critical damage based on new Strength
+            self.mp = self.calculate_mp()  # Recalculate MP after assigning stat points
+            self.sp = self.calculate_sp()  # Recalculate SP after assigning stat points
 
 def create_character():
     print("Welcome to Character Creation!")

@@ -1,3 +1,4 @@
+from enemies import enemies
 class Player:
     def __init__(self, name, player_class):
         self.name = name
@@ -29,7 +30,6 @@ class Player:
 
     def assign_stat_points(self):
         while self.stat_points > 0:
-            print(f"You have {self.stat_points} stat points to assign.")
             print("1. Strength")
             print("2. Agility")
             print("3. Intelligence")
@@ -52,11 +52,7 @@ class Enemy:
         self.xp_value = xp_value
 
 # Example enemies with different XP values
-enemies = [
-    Enemy("Goblin", 50),
-    Enemy("Orc", 100),
-    Enemy("Dragon", 500)
-]
+
 
 # Example of gameplay
 if __name__ == "__main__":
