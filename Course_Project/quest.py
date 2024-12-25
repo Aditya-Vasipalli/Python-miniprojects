@@ -13,6 +13,9 @@ def main():
 
 def start_quest(character, main_menu_callback):
     while True:
+        if character.hp <= 0:
+            game_over(character)
+            break
         print("You are summoned by the king.")
         print("King: Our kingdom is in grave danger. An ancient dragon has awakened and threatens our land.")
         print("King: Brave hero, will you accept the quest to defeat the dragon and save our kingdom?")
@@ -25,7 +28,7 @@ def start_quest(character, main_menu_callback):
             print("King: I understand. The kingdom's fate is uncertain without your help.")
             break
         elif choice.lower() == "menu":
-            main_menu_callback()
+            main_menu_callback(character)
         else:
             print("Invalid choice. Please select again.")
 
@@ -51,6 +54,9 @@ def traverse_paths(character, main_menu_callback):
     current_position = (0, 0)  # Start at the village
 
     while True:
+        if character.hp <= 0:
+            game_over(character)
+            break
         x, y = current_position
         location = paths[x][y]
         
@@ -92,7 +98,7 @@ def traverse_paths(character, main_menu_callback):
         elif choice == '4' and x > 0 and paths[x - 1][y] is not None:
             current_position = (x - 1, y)
         elif choice == '5':
-            main_menu_callback()
+            main_menu_callback(character)
         else:
             print("Invalid choice or move out of bounds. Please select again.")
 
@@ -170,7 +176,8 @@ def dragon_lair(character):
         display_enemy_details(enemy)
         result = win_or_loss(character, enemy)
         print(result)
-        character.check_level_up()  # Check for level up immediately after the battle
+        if character.hp > 0:
+            character.check_level_up()  # Check for level up immediately after the battle
     else:
         print("Enemy not found.")
 
@@ -184,11 +191,16 @@ def random_encounter(character):
         display_enemy_details(enemy)
         result = win_or_loss(character, enemy)
         print(result)
-        character.money += random.randint(10, 50)  # Reward money for defeating the enemy
-        print(f"You have earned some gold. Current gold: {character.money}")
-        character.check_level_up()  # Check for level up immediately after the battle
+        if character.hp > 0:
+            character.money += random.randint(10, 50)  # Reward money for defeating the enemy
+            print(f"You have earned some gold. Current gold: {character.money}")
+            character.check_level_up()  # Check for level up immediately after the battle
     else:
         print("Enemy not found.")
+
+def game_over(character):
+    print(f"{character.name} has died. Game Over.")
+    exit()
 
 if __name__ == "__main__":
     main()

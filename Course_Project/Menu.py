@@ -4,8 +4,7 @@ def start_quest(character, main_menu_callback):
     from quest import start_quest as quest_start
     quest_start(character, main_menu_callback)
 
-def main_menu():
-    character = None
+def main_menu(character=None):
     while True:
         print("\nMain Menu")
         print("1. Create New Character")
@@ -32,15 +31,21 @@ def main_menu():
         elif choice == '4':
             if character:
                 character.inventory.show_inventory()
-                item = input("Enter the item you want to equip: ")
-                character.inventory.equip_item(item)
+                try:
+                    index = int(input("Enter the index of the item you want to equip: "))
+                    character.inventory.equip_item(index)
+                except ValueError:
+                    print("Invalid input. Please enter a valid index.")
             else:
                 print("No character selected. Please create or select a character first.")
         elif choice == '5':
             if character:
                 character.inventory.show_inventory()
-                item = input("Enter the potion you want to use: ")
-                character.inventory.use_item(item, character)
+                try:
+                    index = int(input("Enter the index of the potion you want to use: "))
+                    character.inventory.use_item(index, character)
+                except ValueError:
+                    print("Invalid input. Please enter a valid index.")
             else:
                 print("No character selected. Please create or select a character first.")
         elif choice == '6':
