@@ -1,5 +1,6 @@
 import mysql.connector
 from armor_weapon import armor_options, weapon_options
+from inventory import Inventory
 
 class Character:
     def __init__(self, name, char_class, stats, skills):
@@ -7,7 +8,7 @@ class Character:
         self.char_class = char_class
         self.stats = stats
         self.skills = skills
-        self.inventory = []
+        self.inventory = Inventory()
         self.level = 1
         self.xp = 0
         self.hp = 100  # Default HP; you can adjust based on class
@@ -23,6 +24,7 @@ class Character:
         self.equipped_weapon = None
         self.equipped_armor = None
         self.lingering_effects = []
+        self.money = 100  # Starting money
 
     def calculate_mp(self):
         base_mp = 10
@@ -137,6 +139,25 @@ class Character:
     def remove_lingering_effects(self):
         self.lingering_effects = []
         print(f"{self.name} removed all lingering effects!")
+
+    def equip_item(self, item):
+        if item in self.inventory:
+            print(f"You have equipped {item}.")
+            # Implement equip logic here
+        else:
+            print(f"You do not have {item} in your inventory.")
+
+    def use_item(self, item):
+        if item in self.inventory:
+            if item == "Health Potion":
+                self.hp = min(100, self.hp + 50)
+                print(f"Your health is restored. Current HP: {self.hp}")
+            elif item == "Mana Potion":
+                self.mp = min(50, self.mp + 30)
+                print(f"Your mana is restored. Current MP: {self.mp}")
+            self.inventory.remove(item)
+        else:
+            print(f"You do not have {item} in your inventory.")
 
 def create_character():
     print("Welcome to Character Creation!")
