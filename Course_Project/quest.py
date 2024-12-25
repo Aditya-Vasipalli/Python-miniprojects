@@ -11,7 +11,7 @@ def main():
     # Main storyline logic
     start_quest(character, main_menu)
 
-def start_quest(character, main_menu_callback):
+def start_quest(character, main_menu_callback, current_position=(0, 0)):
     while True:
         if character.hp <= 0:
             game_over(character)
@@ -23,21 +23,23 @@ def start_quest(character, main_menu_callback):
         
         if choice.lower() == "yes":
             print("King: Thank you, brave hero. Your journey begins now.")
-            traverse_paths(character, main_menu_callback)
+            traverse_paths(character, main_menu_callback, current_position)
         elif choice.lower() == "no":
             print("King: I understand. The kingdom's fate is uncertain without your help.")
             break
         elif choice.lower() == "menu":
-            main_menu_callback(character)
+            main_menu_callback(character, current_position)
         else:
             print("Invalid choice. Please select again.")
 
-def traverse_paths(character, main_menu_callback):
+def traverse_paths(character, main_menu_callback, current_position):
     # Define the matrix representing the paths
     paths = [
-        ["village", "market", "forest"],
-        ["hidden_treasure", "wise_old_man", "deeper_forest"],
-        ["return_to_king", None, "dragon_lair"]
+        ["village", "market", "forest", "cave", "mountain"],
+        ["hidden_treasure", "wise_old_man", "deeper_forest", "river", "abandoned_castle"],
+        ["return_to_king", "swamp", "dragon_lair", "dark_forest", "haunted_village"],
+        ["desert", "oasis", "ancient_ruins", "volcano", "ice_cave"],
+        ["plains", "fortress", "enchanted_forest", "wizard_tower", "final_battle"]
     ]
     
     descriptions = {
@@ -48,11 +50,26 @@ def traverse_paths(character, main_menu_callback):
         "wise_old_man": "A wise old man who offers guidance.",
         "deeper_forest": "A deeper part of the forest with more dangers.",
         "return_to_king": "Return to the king to report your progress.",
-        "dragon_lair": "The lair of the ancient dragon."
+        "dragon_lair": "The lair of the ancient dragon.",
+        "cave": "A dark cave with unknown dangers.",
+        "mountain": "A tall mountain with treacherous paths.",
+        "river": "A flowing river with hidden secrets.",
+        "abandoned_castle": "An abandoned castle with eerie silence.",
+        "swamp": "A murky swamp with hidden creatures.",
+        "dark_forest": "A dark forest with unknown dangers.",
+        "haunted_village": "A village haunted by spirits.",
+        "desert": "A vast desert with scorching heat.",
+        "oasis": "A refreshing oasis in the desert.",
+        "ancient_ruins": "Ruins of an ancient civilization.",
+        "volcano": "An active volcano with molten lava.",
+        "ice_cave": "A cold ice cave with slippery paths.",
+        "plains": "Wide open plains with tall grass.",
+        "fortress": "A heavily guarded fortress.",
+        "enchanted_forest": "A magical forest with enchanted creatures.",
+        "wizard_tower": "A tall tower where a powerful wizard resides.",
+        "final_battle": "The final battle against the ancient dragon."
     }
     
-    current_position = (0, 0)  # Start at the village
-
     while True:
         if character.hp <= 0:
             game_over(character)
@@ -76,6 +93,40 @@ def traverse_paths(character, main_menu_callback):
             return_to_king(character)
         elif location == "dragon_lair":
             dragon_lair(character)
+        elif location == "cave":
+            explore_cave(character)
+        elif location == "mountain":
+            climb_mountain(character)
+        elif location == "river":
+            explore_river(character)
+        elif location == "abandoned_castle":
+            explore_castle(character)
+        elif location == "swamp":
+            explore_swamp(character)
+        elif location == "dark_forest":
+            explore_dark_forest(character)
+        elif location == "haunted_village":
+            explore_haunted_village(character)
+        elif location == "desert":
+            explore_desert(character)
+        elif location == "oasis":
+            explore_oasis(character)
+        elif location == "ancient_ruins":
+            explore_ruins(character)
+        elif location == "volcano":
+            explore_volcano(character)
+        elif location == "ice_cave":
+            explore_ice_cave(character)
+        elif location == "plains":
+            explore_plains(character)
+        elif location == "fortress":
+            explore_fortress(character)
+        elif location == "enchanted_forest":
+            explore_enchanted_forest(character)
+        elif location == "wizard_tower":
+            explore_wizard_tower(character)
+        elif location == "final_battle":
+            final_battle(character)
         
         print("\nWhat would you like to do next?")
         if y < len(paths[0]) - 1 and paths[x][y + 1] is not None:
@@ -87,6 +138,7 @@ def traverse_paths(character, main_menu_callback):
         if x > 0 and paths[x - 1][y] is not None:
             print(f"4. Move Up to {paths[x - 1][y]}: {descriptions[paths[x - 1][y]]}")
         print("5. Exit to Main Menu")
+        print("6. Manage Inventory")
         choice = input("Select an option: ")
 
         if choice == '1' and y < len(paths[0]) - 1 and paths[x][y + 1] is not None:
@@ -98,9 +150,36 @@ def traverse_paths(character, main_menu_callback):
         elif choice == '4' and x > 0 and paths[x - 1][y] is not None:
             current_position = (x - 1, y)
         elif choice == '5':
-            main_menu_callback(character)
+            main_menu_callback(character, current_position)
+        elif choice == '6':
+            manage_inventory(character)
         else:
             print("Invalid choice or move out of bounds. Please select again.")
+
+def manage_inventory(character):
+    while True:
+        character.inventory.show_inventory()
+        print("1. Equip Item")
+        print("2. Use Item")
+        print("3. Back to Game")
+        choice = input("Select an option: ")
+
+        if choice == '1':
+            try:
+                index = int(input("Enter the index of the item you want to equip: "))
+                character.inventory.equip_item(index)
+            except ValueError:
+                print("Invalid input. Please enter a valid index.")
+        elif choice == '2':
+            try:
+                index = int(input("Enter the index of the item you want to use: "))
+                character.inventory.use_item(index, character)
+            except ValueError:
+                print("Invalid input. Please enter a valid index.")
+        elif choice == '3':
+            break
+        else:
+            print("Invalid choice. Please select again.")
 
 def village_path(character):
     print("You arrive at the village. The villagers tell you about a hidden treasure and a wise old man in the forest.")
@@ -171,7 +250,7 @@ def dragon_lair(character):
     enemy_name = "Dragon"
     enemy = select_enemy(enemy_name)
     if enemy:
-        level = 5
+        level = character.level  # Match enemy level to character level
         adjust_enemy_stats(enemy, level)
         display_enemy_details(enemy)
         result = win_or_loss(character, enemy)
@@ -182,11 +261,11 @@ def dragon_lair(character):
         print("Enemy not found.")
 
 def random_encounter(character):
-    enemies = ["Goblin", "Orc", "Wolf"]
+    enemies = ["Goblin", "Orc", "Wolf", "Troll", "Bandit", "Skeleton", "Zombie", "Vampire", "Werewolf", "Giant Spider"]
     enemy_name = random.choice(enemies)
     enemy = select_enemy(enemy_name)
     if enemy:
-        level = random.randint(1, 3)
+        level = character.level  # Match enemy level to character level
         adjust_enemy_stats(enemy, level)
         display_enemy_details(enemy)
         result = win_or_loss(character, enemy)
@@ -201,6 +280,75 @@ def random_encounter(character):
 def game_over(character):
     print(f"{character.name} has died. Game Over.")
     exit()
+
+# Additional exploration functions for new locations
+def explore_cave(character):
+    print("You explore the dark cave.")
+    random_encounter(character)
+
+def climb_mountain(character):
+    print("You climb the treacherous mountain.")
+    random_encounter(character)
+
+def explore_river(character):
+    print("You explore the flowing river.")
+    random_encounter(character)
+
+def explore_castle(character):
+    print("You explore the abandoned castle.")
+    random_encounter(character)
+
+def explore_swamp(character):
+    print("You explore the murky swamp.")
+    random_encounter(character)
+
+def explore_dark_forest(character):
+    print("You explore the dark forest.")
+    random_encounter(character)
+
+def explore_haunted_village(character):
+    print("You explore the haunted village.")
+    random_encounter(character)
+
+def explore_desert(character):
+    print("You explore the vast desert.")
+    random_encounter(character)
+
+def explore_oasis(character):
+    print("You explore the refreshing oasis.")
+    random_encounter(character)
+
+def explore_ruins(character):
+    print("You explore the ancient ruins.")
+    random_encounter(character)
+
+def explore_volcano(character):
+    print("You explore the active volcano.")
+    random_encounter(character)
+
+def explore_ice_cave(character):
+    print("You explore the cold ice cave.")
+    random_encounter(character)
+
+def explore_plains(character):
+    print("You explore the wide open plains.")
+    random_encounter(character)
+
+def explore_fortress(character):
+    print("You explore the heavily guarded fortress.")
+    random_encounter(character)
+
+def explore_enchanted_forest(character):
+    print("You explore the magical enchanted forest.")
+    random_encounter(character)
+
+def explore_wizard_tower(character):
+    print("You explore the tall wizard tower.")
+    random_encounter(character)
+
+def final_battle(character):
+    print("You prepare for the final battle against the ancient dragon.")
+    dragon_lair(character)
 
 if __name__ == "__main__":
     main()
