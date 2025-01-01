@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+</head>
+<body>
+    <h1>Welcome to the RPG Game</h1>
+    <button id="create-character-btn">Create Character</button>
+    <button id="equip-weapon-btn">Equip Weapon</button>
+    <button id="equip-armor-btn">Equip Armor</button>
+    <button id="start-combat-btn">Start Combat</button>
+    <div id="character-info"></div>
+    <div id="combat-result"></div>
+
+    <script>
+        document.getElementById('create-character-btn').addEventListener('click', function() {
+            fetch('/create_character')
+                .then(response => response.json())
+                .then(data => {
+                    displayCharacterInfo(data);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('equip-weapon-btn').addEventListener('click', function() {
+            const weaponIndex = prompt("Enter the index of the weapon to equip (0 for Sword, 1 for Axe, 2 for Bow):");
+            fetch('/equip_weapon', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ weapon_index: parseInt(weaponIndex) })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    displayCharacterInfo(data);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('equip-armor-btn').addEventListener('click', function() {
+            const armorIndex = prompt("Enter the index of the armor to equip (0 for Leather Armor, 1 for Chainmail Armor, 2 for Plate Armor):");
+            fetch('/equip_armor', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ armor_index: parseInt(armorIndex) })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    displayCharacterInfo(data);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('start-combat-btn').addEventListener('click', function() {
+            const enemyName = prompt("Enter the name of the enemy to fight (e.g., Goblin):");
+            fetch('/start_combat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ enemy_name: enemyName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    displayCharacterInfo(data.character);
+                    displayCombatResult(data.result);
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        function displayCharacterInfo(data) {
+            const characterInfo = document.getElementById('character-info');
+            characterInfo.innerHTML = `
+                <h2>Character Info</h2>
+                <p>Name: ${data.name}</p>
+                <p>Class: ${data.char_class}</p>
+                <p>Stats: ${JSON.stringify(data.stats)}</p>
+                <p>Skills: ${data.skills.join(', ')}</p>
+                <p>HP: ${data.hp}</p>
+                <p>MP: ${data.mp}</p>
+                <p>SP: ${data.sp}</p>
+                <p>Equipped Weapon: ${data.equipped_weapon ? data.equipped_weapon.name : 'None'}</p>
+                <p>Equipped Armor: ${data.equipped_armor ? data.equipped_armor.name : 'None'}</p>
+            `;
+        }
+
+        function displayCombatResult(result) {
+            const combatResult = document.getElementById('combat-result');
+            combatResult.innerHTML = `
+                <h2>Combat Result</h2>
+                <p>${result}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
