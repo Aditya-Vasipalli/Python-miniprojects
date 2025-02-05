@@ -1,15 +1,21 @@
-#Program to Print values of dictionary
+#program to print values of dictionary 
+# creating dictionary
+def create_dictionary():
+    diction = {}
+    for i in range(int(input('how many values to add in dictionary: '))):
+        key = input('key: ')
+        value = input('value: ')
+        diction[key] = value
+    return diction
 
-#creating dictionary
-diction={
-    "name1": "Aria",
-    "age1": 19,
-    "place1": "london",
-    "name2": "Emily",
-    "age2": 21,
-    "place3": "New york",
-}
+# printing values
+def val_dictionary():
+    diction = create_dictionary()
+    for key, value in diction.items():
+        print("The Values are: ", value)
+    print("also can be shown as: ",list(diction.values()))
 
-print(diction["name1"])
-print(diction["age2"])
-print(diction["place1"])
+try:
+    val_dictionary()
+except:
+    print('enter valid')

@@ -1,16 +1,20 @@
-#Program to check whether a given key already exists in a dictionar
+#Program to check whether a given key already exists in a dictionary
 
-diction={ #declaring dictionary
-    "name1": "Aria",
-    "age1": 19,
-    "place1": "london",
-    "name2": "Emily",
-    "age2": 21,
-    "place3": "New york",
-}
+# creating dictionary
+def create_dictionary():
+    diction = {}
+    for i in range(int(input('how many values to add in dictionary: '))):
+        key = input('key: ')
+        value = input('value: ')
+        diction[key] = value
+    return diction
 #checking
-check=input("check which key: ")
-if check in diction.keys():
-    print('key is already in dictionary')
-else:
-    print('key is not in dictionary')
+try: 
+    diction=create_dictionary()
+    check=input("check which key: ")
+    if check in diction.keys():
+        print('key is already in dictionary')
+    else:
+        print('key is not in dictionary')
+except:
+    print('enter valid value')

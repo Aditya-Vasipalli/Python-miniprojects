@@ -1,17 +1,24 @@
 #Program to insert and delete from dictionary 
 
 #adding value to dictionary:
-dictionar={
-    
-}
-try:
-    dictionar['name']=input('enter name: ')
-    dictionar['age']=int(input('enter name: ' ))
-    dictionar['place']=input('enter location: ')
-except ValueError:
-    print('add valid value')
+def create_dictionary():
+    diction = {}
+    for i in range(int(input('how many values to add in dictionary: '))):
+        key = input('key: ')
+        value = input('value: ')
+        diction[key] = value
+    return diction
 
 #deleting from dictionary:
-print('before deleting', dictionar)
-del dictionar['age']
-print('after deleting:, ', dictionar)
+def deleting_dictionary():
+    dictionar= create_dictionary()
+    print(dictionar.keys())
+    dely = input('enter they key for value you want to delete')
+    print('before deleting', dictionar)
+    del dictionar[dely]
+    print('after deleting:, ', dictionar)
+
+try:
+    deleting_dictionary()
+except:
+    print('enter valid value')
